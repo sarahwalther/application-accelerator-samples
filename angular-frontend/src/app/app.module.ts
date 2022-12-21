@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -8,13 +8,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './home.component';
 import { TopBarComponent } from "./top-bar/top-bar.component";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatTableModule} from "@angular/material/table";
 import {CustomerProfileModule} from "./customer-profile/customer-profile.module";
+import {AuthInterceptor} from "./authorization/auth.intercepter";
+import {CookieService} from "./authorization/cookie.service";
 
 @NgModule({
   declarations: [
     HomeComponent,
-    TopBarComponent
+    TopBarComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,7 +26,14 @@ import {CustomerProfileModule} from "./customer-profile/customer-profile.module"
     MatToolbarModule,
     MatButtonModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    CookieService
+  ],
   bootstrap: [HomeComponent]
 })
 export class AppModule {

@@ -1,6 +1,18 @@
-<mat-toolbar>
-  <span>Customer Profiles</span>
-  <span class="example-spacer"></span>
-  <a mat-button [routerLink]="['/customer-profiles/list']">List all</a>
-  <a mat-button [routerLink]="['/customer-profiles/create']">Create</a>
-</mat-toolbar>
+<div *ngIf="!isLoggedIn" class="content">
+  <mat-toolbar>
+    <span>Customer Profiles</span>
+    <span class="example-spacer"></span>
+    <button class="btn btn-primary" (click)="login()" type="submit">
+      Login
+    </button>
+  </mat-toolbar>
+</div>
+
+<div *ngIf="isLoggedIn" class="content">
+  <mat-toolbar>
+    <span>Customer Profiles</span>
+    <span class="example-spacer"></span>
+    <a mat-button [routerLink]="['/customer-profiles/list']">List all</a>
+    <a mat-button [routerLink]="['/customer-profiles/create']">Create</a>
+  </mat-toolbar>
+</div>
