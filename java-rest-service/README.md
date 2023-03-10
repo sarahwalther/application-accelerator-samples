@@ -131,6 +131,11 @@ curl -X DELETE $APP_URL/api/customer-profiles/{id}
 
 You will need a database running in yur cluster, see [DATABASE.md](DATABASE.md#kubernetes).
 
+## ResourceServer
+As a resource server, this application needs its associated Authorization server to be up and running. The ResourceServerConfig
+ensures that this is the case. You can change the domain of your Authorization server in the `application.properties`.
+--- endResourceServer
+
 ## Tanzu Application Platform (TAP)
 
 Using the `config/workload.yaml` it is possible to build, test and deploy this application onto a

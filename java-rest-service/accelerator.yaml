@@ -92,6 +92,18 @@ accelerator:
       defaultValue: "customer-database"
       label: Database Instance Name
       description: The name of the database instance this application will use
+    - name: isProtectedResourceServer
+      inputType: select
+      defaultValue: false
+      label: Protected Resource Server
+      description: Is this a resource server that should be protected through AppSSO's Authorization server?
+    - name: authority
+      label: Authority
+      description: What is the url of the Authorization Server you want to use? If you're not sure, you can see what the Authservers available in your cluster are by running `kubectl get authserver -A` in your Kubernetes cluster and choose the url for the Authserver you want to connect to.
+      inputType: text
+      dependsOn:
+        name: isProtectedResourceServer
+        value: true
   imports:
   - name: java-version
     expose: []
@@ -218,6 +230,32 @@ engine:
               - text: "customer-database"
                 with: "#databaseResourceName"
     # End Workload Resource name
+
+    # AppSSO Authorization
+    - condition: "#isProtectedResourceServer == true"
+      applyTo: [ "src/main/resources/application.properties" ]
+      chain:
+        - type: ReplaceText
+          substitutions:
+            - text: "<your-authserver-url>"
+              with: "#authority"
+
+    - condition: "!#isProtectedResourceServer"
+      merge:
+        - include: [ "**" ]
+          exclude: [ "src/main/java/com/vmware/tap/accelerators/restservicedb/config/WaitForAuthServerConfiguration", "src/main/java/com/vmware/tap/accelerators/restservicedb/config/ResourceServerConfig" ]
+        - include: [ "src/main/resources/application.properties", "README.md" ]
+          chain:
+            - type: ReplaceText
+              substitutions:
+                - text: "spring.security.oauth2.resourceserver.jwt.issuer-uri=<your-authserver-url>"
+                  with: "''"
+            - type: ReplaceText
+              regex:
+                pattern: "## ResourceServer[\\s\\S]+?--- endResourceServer"
+                with: "''"
+
+    # End AppSSO Authorization
 
     # Test pipeline
     - merge:

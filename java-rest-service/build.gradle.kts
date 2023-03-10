@@ -28,6 +28,12 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation("org.liquibase:liquibase-core")
 
+    // ResourceServerStart
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    // ResourceServerEnd
+
+
     // Test
     testImplementation ("org.springframework.boot:spring-boot-starter-test")
 }
